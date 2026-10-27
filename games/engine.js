@@ -17,10 +17,11 @@ export const IDLE_TEXT = '스피커를 누르면 다시 들을 수 있어!';
  * @param ask ({ index, range, last }) => { n, prompt?, hint: async () => void }
  * @param shouldPause () => boolean  놀이 시간이 다 됐는지. 맞힌 뒤 다음 문제로 가기 전에 확인한다.
  * @param onPause 멈췄을 때 (잠금 화면으로)
+ * @param praise 맞혔을 때 고를 칭찬 목록 (게임에 맞지 않는 칭찬을 뺄 때). 주지 않으면 기본 PRAISE
  */
 export function createGameRun({
   levels, fx, ask, onProgress = () => {}, onFinish = () => {}, shouldPause = () => false, onPause = () => {},
-  total = QUESTIONS_PER_GAME,
+  total = QUESTIONS_PER_GAME, praise = PRAISE,
 }) {
   let index = 0;
   let difficulty = startDifficulty();
@@ -67,7 +68,7 @@ export function createGameRun({
     busy = true;
     clearTimeout(idleTimer);
     fx.sfx.yes();
-    fx.say(pickOne(PRAISE));
+    fx.say(pickOne(praise));
     fx.cheer();
     const result = hinted ? 'hinted' : attempts === 0 ? 'first' : 'retry';
     difficulty = nextDifficulty(difficulty, result, levels.length);
