@@ -4,7 +4,8 @@ export const NATIVE = Object.freeze(['', '하나', '둘', '셋', '넷', '다섯'
 /** 단위 앞에 붙는 말: "세 마리", "네 개" */
 export const ADJ = Object.freeze(['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열']);
 
-// 결과("똑똑해")보다 과정("끝까지 세었네")을 칭찬한다
+// 결과("똑똑해")보다 과정("끝까지 세었네")을 칭찬한다.
+// 녹음 이름이 순서(praise-1, praise-2 …)로 붙으므로 새 칭찬은 맨 뒤에 붙인다.
 export const PRAISE = Object.freeze([
   '하나씩 끝까지 세었네!',
   '잘 보고 골랐구나!',
@@ -12,7 +13,19 @@ export const PRAISE = Object.freeze([
   '우와, 맞았어!',
   '끝까지 잘 했어!',
   '꼼꼼하게 세었구나!',
+  '잘 생각해서 골랐구나!',
+  '선을 잘 그렸구나!',
+  '끝까지 잘 따라 그렸어!',
 ]);
+
+// 어느 게임에나 맞는 칭찬
+export const GENERAL_PRAISE = Object.freeze([PRAISE[2], PRAISE[3], PRAISE[4]]);
+// 하나씩 세는 게임 (과일 세기, 물웅덩이 채우기, 풍선 불기 …)
+export const COUNT_PRAISE = Object.freeze([PRAISE[0], PRAISE[5], ...GENERAL_PRAISE]);
+// 보기에서 고르는 게임 (풍선 터뜨리기, 숫자 찾기, 식 고르기 …)
+export const PICK_PRAISE = Object.freeze([PRAISE[1], PRAISE[6], ...GENERAL_PRAISE]);
+// 선을 긋거나 따라 쓰는 게임
+export const DRAW_PRAISE = Object.freeze([PRAISE[7], PRAISE[8], ...GENERAL_PRAISE]);
 
 /** 주사위 무늬 자리 (3×3 칸 번호 0~8) */
 export const DICE = Object.freeze({
