@@ -10,7 +10,7 @@ export const PRAISE_MAX_MS = 4000;
 export const IDLE_REMIND_MS = 8000;
 /** 첫 오답 뒤 잠깐 누르기를 막는 시간 (연타가 바로 두 번째 오답이 되지 않게) */
 export const RETRY_LOCK_MS = 700;
-export const RETRY_TEXT = '다시 세어 볼까?';
+export const RETRY_TEXT = '다시 해 볼까?';
 export const IDLE_TEXT = '스피커를 누르면 다시 들을 수 있어!';
 
 /**
@@ -53,7 +53,18 @@ export function createGameRun({
 
   function setPrompt(text, speak = true) {
     prompt = text;
-    fx.bubble(text, speak);
+    return fx.bubble(text, speak);
+  }
+
+  /** 문제 읽기가 끝난 뒤부터 8초를 잰다 (긴 이야기 문제를 알림이 끊지 않게) */
+  function armIdleAfter(spoken) {
+    clearTimeout(idleTimer);
+    if (typeof spoken?.then !== 'function') return armIdle();
+    const asked = question;
+    const rearm = () => {
+      if (question === asked) armIdle();
+    };
+    spoken.then(rearm, rearm);
   }
 
   function nextQuestion() {
@@ -64,8 +75,7 @@ export function createGameRun({
     reminded = false;
     const last = question?.n ?? 0;
     question = ask({ index, range: rangeOf(difficulty, levels), last });
-    if (question.prompt) setPrompt(question.prompt);
-    armIdle();
+    armIdleAfter(question.prompt ? setPrompt(question.prompt) : undefined);
   }
 
   function goNext() {
